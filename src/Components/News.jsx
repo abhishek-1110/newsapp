@@ -354,8 +354,9 @@ export class News extends Component {
 
   // using componentdidmount -- this method runs after render() function
   async componentDidMount() {
+    this.props.setProgress(10);
     try {
-      let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=26c4a6e4885b4905a530683dfd84f38e&page=${this.state.page}&pageSize=${this.props.pageSize}`;
+      let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=26c4a6e4885b4905a530683dfd84f38e&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
      // this.setState({ loading: true });
       let data = await fetch(url);
       let parsedData = await data.json();
@@ -364,6 +365,8 @@ export class News extends Component {
         articles: parsedData.articles,
         totalResults: parsedData.totalResults,
       });
+      this.props.setProgress(100);
+
     } catch (e) {
       console.log("Something went wrong", e);
     }
@@ -427,7 +430,6 @@ export class News extends Component {
   render() {
     return (
       <div className="container my-3">
-        <div className="container d-flex justify-content-between">
           {/* <button
             disabled={this.state.page <= 1}
             className="btn btn-primary me-md-2"
@@ -449,7 +451,6 @@ export class News extends Component {
           >
             Next &rarr;
           </button> */}
-        </div>
         {/*{this.state.loading && <Spinner />}*/}
         <InfiniteScroll
           dataLength={this.state.articles.length}
